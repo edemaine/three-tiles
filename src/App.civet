@@ -6,16 +6,18 @@ solid-js/store import { createStore }
 ./color.civet import { color, colors, setColors }
 ./Tile.civet import { Tile, type Prototile }
 ./examples.civet import { examples }
+./ThreeTiles.civet import { ThreeTiles }
 
 export function App()
   [tiles, setTiles] := createStore<Prototile[]> examples.aperiodic
+  glues := colors
 
   <h1>Wang Tiles → Three Tiles
   <hr>
   <h2>Input: Wang Tiles
-  <h3>{colors()} Glues
+  <h3>{glues()} Glues
   <.glues>
-    <For each=[0...colors()]>
+    <For each=[0...glues()]>
       (glue) =>
         <.glue style={background: color glue}>
     <button onClick=
@@ -31,3 +33,4 @@ export function App()
         <Tile {tile}>
   <hr>
   <h2>Output: Three Tiles
+  <ThreeTiles {glues(), tiles}>

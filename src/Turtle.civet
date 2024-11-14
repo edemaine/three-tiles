@@ -1,0 +1,63 @@
+export π := Math.PI
+export degToRad := π / 180
+/** cos of degrees */
+export function cos(angle: number): number
+  Math.cos angle * degToRad
+/** sin of degrees */
+export function sin(angle: number): number
+  Math.sin angle * degToRad
+
+export class Turtle
+  /** Turtle's position */
+  x: number
+  y: number
+  /** Turtle's direction as angle relative to x axis, in degrees */
+  angle: number
+  /** Accumulated points */
+  points: [number, number][]
+
+  @(@x = 0, @y = 0, @angle = 0)
+    @points = [[@x, @y]]
+
+  /** Forward */
+  f(d: number): Turtle
+    @x += d * cos @angle
+    @y -= d * sin @angle
+    @points.push [@x, @y]
+    @
+  /** Right turn */
+  r(dangle: number): Turtle
+    @angle -= dangle
+    @
+  /** Left turn */
+  l(dangle: number): Turtle
+    @angle += dangle
+    @
+
+  /** For SVG <polygon points="..."> */
+  toPolygonString(): string
+    @points
+    .map [x, y] => `${x},${y}`
+    .join ' '
+
+  minX(): number
+    for min [x] of @points
+      x
+  maxX(): number
+    for max [x] of @points
+      x
+  minY(): number
+    for min [, y] of @points
+      y
+  maxY(): number
+    for max [, y] of @points
+      y
+
+  /** Shift drawing over so that min x and y are zero */
+  shift(ox = 0, oy = 0): Turtle
+    dx := ox - @minX()
+    dy := oy - @minY()
+    for each point of @points
+      point[0] += dx
+      point[1] += dy
+    @

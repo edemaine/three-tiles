@@ -1,0 +1,128 @@
+solid-js import { createMemo, type JSX }
+
+./Tile.civet import { type Prototile }
+./Turtle.civet import { Turtle, cos, sin }
+
+l := 1.5
+eps2 := 5
+eps3 := 5
+eps1 := eps2 + eps3
+
+function staple(t: Turtle): Turtle
+  t
+  //.f l * (2 - cos(eps3) + sin(eps1))
+  .l 90 + eps1
+  .f l
+  .r 90 + eps2
+  .f l
+  .r 90 + eps3
+  .f 2 * l * (cos(eps1) + sin(eps3))
+  .r 90 + eps3
+  .f l
+  // Closing:
+  //.r 90 + eps2
+  //.f l
+
+function tweedledee(t: Turtle): Turtle
+  t
+  .f l * (2 - cos(eps3) + sin(eps1))
+  .l 90 + eps1
+  .f l
+  .r 90 + eps2
+  .f l
+  .r 90 + eps3
+  .f 2 * l * (cos(eps1) + sin(eps3))
+  .l 90 + eps3
+  .f l
+  .l 90 + eps2
+  .f l
+  .r 90 + eps1
+  .f l * (2 - cos(eps3) + sin(eps1))
+
+function tweedledum(t: Turtle): Turtle
+  t
+  .f l * (2 - cos(eps3) + sin(eps1))
+  .r 90 + eps1
+  .f l
+  .l 90 + eps2
+  .f l
+  .l 90 + eps3
+  .f 2 * l * (cos(eps1) + sin(eps3))
+  .r 90 + eps3
+  .f l
+  .r 90 + eps2
+  .f l
+  .l 90 + eps1
+  .f l * (2 - cos(eps3) + sin(eps1))
+
+aroundGlueGap := 6*l
+midGlueGap := 1.5*l
+//aroundGlueGap := 5*l
+//midGlueGap := 4*l
+
+function wheel(t: Turtle, tiles: Prototile[], nBits: number): Turtle
+  function glue(g: number)
+    bits := g.toString(2).padStart(nBits, '0')
+    t.f aroundGlueGap
+    for each bit, i of bits
+      t.f midGlueGap unless i is 0
+      if bit is '0'
+        tweedledee t
+      else // bit is 1
+        tweedledum t
+    t.f aroundGlueGap
+
+  for each dir of ['n', 'e', 's', 'w'] as const
+    for each tile of tiles
+      glue tile[dir]
+      t.r 90 / tiles#
+  t
+
+function notch(t: Turtle): Turtle
+  t
+  .f l * (2 - cos(eps3) + sin(eps1))
+  .l (90 + eps1)
+  .f l
+  .r 90 + eps2
+  .f l
+  .r 2 * eps3
+  .f l
+  .r 90 + eps2
+  .f l
+  .l 90 + eps1
+  .f l * (2 - cos(eps3) + sin(eps1))
+
+function shuriken(t: Turtle, nTiles: number, nBits: number): Turtle
+  for [1..4] // directions
+    for i of [2..nTiles]
+      t
+      .r 90 / nTiles
+      .f aroundGlueGap
+      for each i of [0...nBits]
+        t.f midGlueGap unless i is 0
+        notch t
+      t.f aroundGlueGap
+    t.l 180 - 90 / nTiles
+  t
+
+margin := 1
+tileGap := 3 * l
+export function ThreeTiles(props: {glues: number, tiles: Prototile[]})
+  createMemo =>
+    nBits .= 1
+    do
+      maxVal .= 2
+      while maxVal < props.glues
+        nBits++
+        maxVal <<= 1
+
+    staplePoly := new Turtle |> staple |> .shift()
+    shurikenPoly := new Turtle |> shuriken ., props.tiles#, nBits
+    |> .shift() //staplePoly.maxX() + tileGap
+    wheelPoly := new Turtle |> wheel ., props.tiles, nBits
+    .shift shurikenPoly.maxX() + tileGap
+    <svg viewBox=`${-margin} ${-margin} ${wheelPoly.maxX() + 2*margin} ${wheelPoly.maxY() + 2*margin}`>
+      <polygon .ptile points=staplePoly.toPolygonString()>
+      <polygon .ptile points=shurikenPoly.toPolygonString()>
+      <polygon .ptile points=wheelPoly.toPolygonString()>
+  as! JSX.Element
