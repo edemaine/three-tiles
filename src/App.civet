@@ -5,14 +5,10 @@ solid-js/store import { createStore }
 
 ./color.civet import { color, colors, setColors }
 ./Tile.civet import { Tile, type Prototile }
+./examples.civet import { examples }
 
 export function App()
-  [tiles, setTiles] := createStore<Prototile[]> [
-    w: 0
-    e: 1
-    n: 2
-    s: 3
-  ]
+  [tiles, setTiles] := createStore<Prototile[]> examples.aperiodic
 
   <h1>Wang Tiles → Three Tiles
   <hr>

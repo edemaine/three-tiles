@@ -1,0 +1,47 @@
+export examples :=
+  // https://en.wikipedia.org/wiki/Wang_tile#/media/File:Wang_11_tiles.svg
+  aperiodic:
+    . w: 1
+      e: 0
+      n: 0
+      s: 0
+    . w: 1
+      e: 0
+      n: 2
+      s: 2
+    . w: 1
+      e: 1
+      n: 0
+      s: 1
+    . w: 2
+      e: 2
+      n: 3
+      s: 0
+    . w: 2
+      e: 2
+      n: 2
+      s: 3
+    . w: 3
+      e: 3
+      n: 3
+      s: 0
+    . w: 3
+      e: 1
+      n: 0
+      s: 2
+    . w: 0
+      e: 3
+      n: 2
+      s: 2
+    . w: 0
+      e: 0
+      n: 2
+      s: 3
+    . w: 0
+      e: 1
+      n: 1
+      s: 2
+    . w: 1
+      e: 3
+      n: 0
+      s: 0
