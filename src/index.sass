@@ -5,3 +5,25 @@ body, input, textarea, button, select
   background: black
   color: white
   font-size: 1em
+
+.glues
+  display: flex
+  gap: 3px
+  flex-wrap: wrap
+  > .glue
+    display: inline-block
+    width: 25px
+    height: 25px
+
+.tile
+  width: 50px
+  height: 50px
+  > .background
+    fill: gray
+  > .outline
+    fill: none
+    stroke: #222
+    stroke-width: 4
+  > .glue
+    stroke: #444
+    stroke-width: 1

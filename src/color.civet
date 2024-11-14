@@ -1,0 +1,20 @@
+solid-js import { createSignal }
+
+export [colors, setColors] := createSignal 4
+
+// Generate ith color in a palette of n colors
+export function color(i: number): string
+  n := colors()
+  i = i %% n
+
+  hues .= n
+  lights .= [50]
+  if n > 8
+    lights.push 25, 75
+    if n > 64
+      lights.push 12.5, 37.5, 62.5, 87.5
+    hues = Math.ceil hues / lights#
+
+  hue := i %% hues
+  light := lights[i %/ hues]
+  `hsl(${(i * 360 / hues).toFixed 1}, 100%, ${light}%)`

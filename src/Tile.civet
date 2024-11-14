@@ -1,0 +1,27 @@
+./color.civet import { color }
+
+export type Prototile
+  n: number
+  s: number
+  w: number
+  e: number
+
+tileSize := 50
+glueSize := 13
+
+export function Tile(props: {tile: Prototile})
+  <svg .tile viewBox=`0 0 ${tileSize} ${tileSize}`>
+    <rect .background width=tileSize height=tileSize>
+    <polygon .glue fill=color(props.tile.n) points=
+      `0,0 ${glueSize},${glueSize} ${tileSize - glueSize},${glueSize} ${tileSize},0`
+    >
+    <polygon .glue fill=color(props.tile.w) points=
+      `0,0 ${glueSize},${glueSize} ${glueSize},${tileSize - glueSize} 0,${tileSize}`
+    >
+    <polygon .glue fill=color(props.tile.s) points=
+      `0,${tileSize} ${glueSize},${tileSize - glueSize} ${tileSize - glueSize},${tileSize - glueSize} ${tileSize},${tileSize}`
+    >
+    <polygon .glue fill=color(props.tile.e) points=
+      `${tileSize},0 ${tileSize - glueSize},${glueSize} ${tileSize - glueSize},${tileSize - glueSize} ${tileSize},${tileSize}`
+    >
+    <rect .outline width=tileSize height=tileSize>

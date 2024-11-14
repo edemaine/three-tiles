@@ -1,2 +1,37 @@
+"civet jsxCodeNested"
+
+solid-js import { createSignal, For }
+solid-js/store import { createStore }
+
+./color.civet import { color, colors, setColors }
+./Tile.civet import { Tile, type Prototile }
+
 export function App()
-  <h1>Hello, World!
+  [tiles, setTiles] := createStore<Prototile[]> [
+    w: 0
+    e: 1
+    n: 2
+    s: 3
+  ]
+
+  <h1>Wang Tiles → Three Tiles
+  <hr>
+  <h2>Input: Wang Tiles
+  <h3>{colors()} Glues
+  <.glues>
+    <For each=[0...colors()]>
+      (glue) =>
+        <.glue style={background: color glue}>
+    <button onClick=
+      (e) => setColors Math.max 2, . %/ 2
+    >−
+    <button onClick=
+      (e) => setColors (2*)
+    >+
+  <h3>{tiles#} Tiles
+  <.tiles>
+    <For each=tiles>
+      (tile) =>
+        <Tile {tile}>
+  <hr>
+  <h2>Output: Three Tiles
