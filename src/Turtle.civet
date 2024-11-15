@@ -18,6 +18,8 @@ export class Turtle
 
   @(@x = 0, @y = 0, @angle = 0)
     @points = [[@x, @y]]
+  position(): [number, number]
+    [@x, @y]
 
   /** Forward */
   f(d: number): Turtle

@@ -164,12 +164,15 @@ export function ThreeTiles(props: {tiles: Prototile[], glues: number})
     {tiles, glues} .= unsignedToSigned props.tiles, props.glues
     nBits := ceilLog2 glues
     staplePoly := new Turtle |> staple |> .shift()
-    shurikenPoly := new Turtle |> shuriken ., tiles#, nBits
-    |> .shift() //staplePoly.maxX() + tileGap
     wheelPoly := new Turtle |> wheel ., tiles, nBits
-    .shift shurikenPoly.maxX() + tileGap
-    <svg viewBox=`${-margin} ${-margin} ${wheelPoly.maxX() + 2*margin} ${wheelPoly.maxY() + 2*margin}`>
-      <polygon .ptile points=staplePoly.toPolygonString()>
-      <polygon .ptile points=shurikenPoly.toPolygonString()>
-      <polygon .ptile points=wheelPoly.toPolygonString()>
+    |> .shift() //staplePoly.maxX() + tileGap
+    shurikenPoly := new Turtle |> shuriken ., tiles#, nBits
+    |> .shift()
+    shurikenPoly.shift
+      wheelPoly.maxX() - shurikenPoly.maxX()/2 - l
+      wheelPoly.maxY() - shurikenPoly.maxY()/2 - l
+    <svg viewBox=`${-margin} ${-margin} ${shurikenPoly.maxX() + 2*margin} ${shurikenPoly.maxY() + 2*margin}`>
+      <polygon .ptile points=staplePoly.toPolygonString() fill="yellow">
+      <polygon .ptile points=wheelPoly.toPolygonString() fill="#9142c3">
+      <polygon .ptile points=shurikenPoly.toPolygonString() fill="green">
   as! JSX.Element
