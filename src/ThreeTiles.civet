@@ -1,4 +1,5 @@
 solid-js import { createMemo, type JSX }
+operator { max } := Math
 
 ./Tile.civet import { type Prototile }
 ./Turtle.civet import { Turtle, cos, sin }
@@ -62,11 +63,23 @@ midGlueGap := 1.5*l
 
 function wheel(t: Turtle, tiles: Prototile[], nBits: number): Turtle
   function glue(g: number)
-    bits := g.toString(2).padStart(nBits, '0')
+    bitString .=
+    Math.abs(g) - 1 // map positive/negative glue to nonnegative color
+    |> .toString 2  // binary representation
+    |> .padStart nBits, '0' // exactly nBits long
+    // Convert string to array of numbers
+    bits := for each bit of bitString
+      Number bit
+    if g > 0
+      bits.unshift 0, 0
+      bits.push 0, 1
+    else
+      bits.unshift 1, 0
+      bits.push 0, 0
     t.f aroundGlueGap
     for each bit, i of bits
       t.f midGlueGap unless i is 0
-      if bit is '0'
+      if bit is 0
         tweedledee t
       else // bit is 1
         tweedledum t
@@ -98,28 +111,62 @@ function shuriken(t: Turtle, nTiles: number, nBits: number): Turtle
       t
       .r 90 / nTiles
       .f aroundGlueGap
-      for each i of [0...nBits]
+      for each i of [0...nBits + 4] // 4 to compensate for padding
         t.f midGlueGap unless i is 0
         notch t
       t.f aroundGlueGap
     t.l 180 - 90 / nTiles
   t
 
+function ceilLog2(glues: number): number
+  nBits .= 1
+  maxVal .= 2
+  while maxVal < glues
+    nBits++
+    maxVal <<= 1
+  nBits
+
+function unsignedToSigned(tiles: Prototile[], glues: number): {tiles: Prototile[], glues: number}
+  // Remove aliasing
+  tiles = for each tile of tiles
+    {...tile}
+  // Glues wrap around
+  for each tile of tiles
+    tile.w %%= glues
+    tile.e %%= glues
+    tile.s %%= glues
+    tile.n %%= glues
+  // Remove overlap from horizontal and vertical glues
+  hGlues := new Set (tile.w for each tile of tiles) ++
+                    (tile.e for each tile of tiles)
+  vGlues := new Set (tile.n for each tile of tiles) ++
+                    (tile.s for each tile of tiles)
+  maxGlue .= for max glue of hGlues.union vGlues
+  for glue of hGlues.intersection vGlues
+    // Map glue -> maxGlue (new glue number)
+    maxGlue++
+    for each tile of tiles
+      tile.w = maxGlue if tile.w is glue
+      tile.e = maxGlue if tile.e is glue
+  glues max= maxGlue + 1
+  // Sign glues, and avoid zero, because -0 is messy
+  for each tile of tiles
+    tile.w = -(tile.w + 1)
+    tile.e = +(tile.e + 1)
+    tile.s = -(tile.s + 1)
+    tile.n = +(tile.n + 1)
+  {tiles, glues}
+
 margin := 1
 tileGap := 3 * l
-export function ThreeTiles(props: {glues: number, tiles: Prototile[]})
+export function ThreeTiles(props: {tiles: Prototile[], glues: number})
   createMemo =>
-    nBits .= 1
-    do
-      maxVal .= 2
-      while maxVal < props.glues
-        nBits++
-        maxVal <<= 1
-
+    {tiles, glues} .= unsignedToSigned props.tiles, props.glues
+    nBits := ceilLog2 glues
     staplePoly := new Turtle |> staple |> .shift()
-    shurikenPoly := new Turtle |> shuriken ., props.tiles#, nBits
+    shurikenPoly := new Turtle |> shuriken ., tiles#, nBits
     |> .shift() //staplePoly.maxX() + tileGap
-    wheelPoly := new Turtle |> wheel ., props.tiles, nBits
+    wheelPoly := new Turtle |> wheel ., tiles, nBits
     .shift shurikenPoly.maxX() + tileGap
     <svg viewBox=`${-margin} ${-margin} ${wheelPoly.maxX() + 2*margin} ${wheelPoly.maxY() + 2*margin}`>
       <polygon .ptile points=staplePoly.toPolygonString()>
