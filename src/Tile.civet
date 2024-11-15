@@ -1,3 +1,4 @@
+@thisbeyond/solid-dnd import { createDroppable }
 ./color.civet import { color }
 
 export type Prototile
@@ -9,19 +10,27 @@ export type Prototile
 tileSize := 50
 glueSize := 13
 
-export function Tile(props: {tile: Prototile})
+export function Tile(props: {tile: Prototile, id: number})
+  droppableN := createDroppable 4*props.id+0, 'n'
+  droppableW := createDroppable 4*props.id+1, 'w'
+  droppableS := createDroppable 4*props.id+2, 's'
+  droppableE := createDroppable 4*props.id+3, 'e'
   <svg .tile viewBox=`0 0 ${tileSize} ${tileSize}`>
     <rect .background width=tileSize height=tileSize>
     <polygon .glue fill=color(props.tile.n) points=
       `0,0 ${glueSize},${glueSize} ${tileSize - glueSize},${glueSize} ${tileSize},0`
+    use:droppableN classList={dropping: droppableN.isActiveDroppable}
     >
     <polygon .glue fill=color(props.tile.w) points=
       `0,0 ${glueSize},${glueSize} ${glueSize},${tileSize - glueSize} 0,${tileSize}`
+    use:droppableW classList={dropping: droppableW.isActiveDroppable}
     >
     <polygon .glue fill=color(props.tile.s) points=
       `0,${tileSize} ${glueSize},${tileSize - glueSize} ${tileSize - glueSize},${tileSize - glueSize} ${tileSize},${tileSize}`
+    use:droppableS classList={dropping: droppableS.isActiveDroppable}
     >
     <polygon .glue fill=color(props.tile.e) points=
       `${tileSize},0 ${tileSize - glueSize},${glueSize} ${tileSize - glueSize},${tileSize - glueSize} ${tileSize},${tileSize}`
+    use:droppableE classList={dropping: droppableE.isActiveDroppable}
     >
     <rect .outline width=tileSize height=tileSize>

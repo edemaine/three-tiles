@@ -1,9 +1,15 @@
 "civet jsxCodeNested"
 
-solid-js import { createSignal, For }
+solid-js import { createSignal, For, Index }
 solid-js/store import { createStore }
+@thisbeyond/solid-dnd import {
+  DragDropProvider
+  DragDropSensors
+  DragEventHandler
+}
 
-./color.civet import { color, colors, setColors }
+./color.civet import { colors, setColors }
+./Glue.civet import { Glue }
 ./Tile.civet import { Tile, type Prototile }
 ./examples.civet import { examples }
 ./ThreeTiles.civet import { ThreeTiles }
@@ -13,34 +19,40 @@ export function App()
   [numTiles, setNumTiles] := createSignal tiles#
   glues := colors
 
-  <h1>Wang Tiles → Three Tiles
-  <hr>
-  <h2>Input: Wang Tiles
-  <h3>{glues()} Glues
-  <.glues>
-    <button onClick=
-      (e) => setColors Math.max 2, . %/ 2
-    >−
-    <button onClick=
-      (e) => setColors (2*)
-    >+
-    <For each=[0...glues()]>
-      (glue) =>
-        <.glue style={background: color glue}>
-  <h3>{tiles#} Tiles
-  <.tiles>
-    <button onClick=
-      (e) => setNumTiles Math.max 1, . - 1
-    >−
-    <button onClick=
-      (e) =>
-        setNumTiles (1+)
-        if numTiles() > tiles#
-          setTiles tiles#, {...tiles.-1}
-    >+
-    <For each=tiles[..<numTiles()]>
-      (tile) =>
-        <Tile {tile}>
-  <hr>
-  <h2>Output: Three Tiles
-  <ThreeTiles {glues()} tiles=tiles[..<numTiles()]>
+  function onDragEnd({draggable, droppable})
+    return unless droppable
+    setTiles droppable.id %/ 4, droppable.data, draggable.id
+
+  <DragDropProvider {onDragEnd}>
+    <DragDropSensors>
+    <h1>Wang Tiles → Three Tiles
+    <hr>
+    <h2>Input: Wang Tiles
+    <h3>{glues()} Glues
+    <.glues>
+      <button onClick=
+        (e) => setColors Math.max 2, . %/ 2
+      >−
+      <button onClick=
+        (e) => setColors (2*)
+      >+
+      <For each=[0...glues()]>
+        (glue) =>
+          <Glue color=glue>
+    <h3>{tiles#} Tiles
+    <.tiles>
+      <button onClick=
+        (e) => setNumTiles Math.max 1, . - 1
+      >−
+      <button onClick=
+        (e) =>
+          setNumTiles (1+)
+          if numTiles() > tiles#
+            setTiles tiles#, {...tiles.-1}
+      >+
+      <Index each=tiles[..<numTiles()]>
+        (tile, id) =>
+          <Tile {tile(), id}>
+    <hr>
+    <h2>Output: Three Tiles
+    <ThreeTiles {glues()} tiles=tiles[..<numTiles()]>
