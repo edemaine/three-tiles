@@ -169,8 +169,8 @@ export function ThreeTiles(props: {tiles: Prototile[], glues: number})
     shurikenPoly := new Turtle |> shuriken ., tiles#, nBits
     |> .shift()
     shurikenPoly.shift
-      wheelPoly.maxX() - shurikenPoly.maxX()/2 - l
-      wheelPoly.maxY() - shurikenPoly.maxY()/2 - l
+      wheelPoly.maxX() - shurikenPoly.maxX()/2 - l * (cos(eps1) + sin(eps3))
+      wheelPoly.maxY() - shurikenPoly.maxY()/2 - l * (cos(eps1) + sin(eps3))
     <svg viewBox=`${-margin} ${-margin} ${shurikenPoly.maxX() + 2*margin} ${shurikenPoly.maxY() + 2*margin}`>
       <polygon .ptile points=staplePoly.toPolygonString() fill="yellow">
       <polygon .ptile points=wheelPoly.toPolygonString() fill="#9142c3">

@@ -10,6 +10,7 @@ solid-js/store import { createStore }
 
 export function App()
   [tiles, setTiles] := createStore<Prototile[]> examples.aperiodic
+  [numTiles, setNumTiles] := createSignal tiles#
   glues := colors
 
   <h1>Wang Tiles → Three Tiles
@@ -17,20 +18,29 @@ export function App()
   <h2>Input: Wang Tiles
   <h3>{glues()} Glues
   <.glues>
-    <For each=[0...glues()]>
-      (glue) =>
-        <.glue style={background: color glue}>
     <button onClick=
       (e) => setColors Math.max 2, . %/ 2
     >−
     <button onClick=
       (e) => setColors (2*)
     >+
+    <For each=[0...glues()]>
+      (glue) =>
+        <.glue style={background: color glue}>
   <h3>{tiles#} Tiles
   <.tiles>
-    <For each=tiles>
+    <button onClick=
+      (e) => setNumTiles Math.max 1, . - 1
+    >−
+    <button onClick=
+      (e) =>
+        setNumTiles (1+)
+        if numTiles() > tiles#
+          setTiles tiles#, {...tiles.-1}
+    >+
+    <For each=tiles[..<numTiles()]>
       (tile) =>
         <Tile {tile}>
   <hr>
   <h2>Output: Three Tiles
-  <ThreeTiles {glues(), tiles}>
+  <ThreeTiles {glues()} tiles=tiles[..<numTiles()]>
