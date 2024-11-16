@@ -18,6 +18,7 @@ export function App()
   [tiles, setTiles] := createStore<Prototile[]> examples.aperiodic
   [numTiles, setNumTiles] := createSignal tiles#
   glues := colors
+  [zoom, setZoom] := createSignal 1
 
   function onDragEnd({draggable, droppable})
     return unless droppable
@@ -26,7 +27,7 @@ export function App()
   <DragDropProvider {onDragEnd}>
     <DragDropSensors>
     <h1>Wang Tiles → Three Tiles
-      <span style="font-size: smaller; margin-left: 1em">[<a href="https://arxiv.org/abs/2409.11582">paper</a>] [<a href="https://github.com/edemaine/three-tiles/">source code on GitHub</a>]
+      <span .postfix>[<a href="https://arxiv.org/abs/2409.11582">paper</a>] [<a href="https://github.com/edemaine/three-tiles/">source code on GitHub</a>]
     <hr>
     <h2>Input: Wang Tiles
     <h3>{glues()} Glues
@@ -56,4 +57,12 @@ export function App()
           <Tile {tile(), id}>
     <hr>
     <h2>Output: Three Tiles
-    <ThreeTiles {glues()} tiles=tiles[..<numTiles()]>
+      <span .postfix>🔍
+        <button title="Zoom in" onClick=
+          (e) => setZoom (2*)
+        >+
+        <button title="Zoom out" onClick=
+          (e) => setZoom (/2)
+        >−
+    <div .container>
+      <ThreeTiles {glues(), zoom()} tiles=tiles[..<numTiles()]>

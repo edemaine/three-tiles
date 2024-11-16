@@ -159,7 +159,7 @@ function unsignedToSigned(tiles: Prototile[], glues: number): {tiles: Prototile[
 
 margin := 1
 tileGap := 3 * l
-export function ThreeTiles(props: {tiles: Prototile[], glues: number})
+export function ThreeTiles(props: {tiles: Prototile[], glues: number, zoom: number})
   createMemo =>
     {tiles, glues} .= unsignedToSigned props.tiles, props.glues
     nBits := ceilLog2 glues
@@ -171,7 +171,7 @@ export function ThreeTiles(props: {tiles: Prototile[], glues: number})
     shurikenPoly.shift
       wheelPoly.maxX() - shurikenPoly.maxX()/2 - l * (cos(eps1) + sin(eps3))
       wheelPoly.maxY() - shurikenPoly.maxY()/2 - l * (cos(eps1) + sin(eps3))
-    <svg viewBox=`${-margin} ${-margin} ${shurikenPoly.maxX() + 2*margin} ${shurikenPoly.maxY() + 2*margin}`>
+    <svg viewBox=`${-margin} ${-margin} ${shurikenPoly.maxX() + 2*margin} ${shurikenPoly.maxY() + 2*margin}` width=`${props.zoom*100}%`>
       <polygon .ptile points=staplePoly.toPolygonString() fill="yellow">
       <polygon .ptile points=wheelPoly.toPolygonString() fill="#9142c3">
       <polygon .ptile points=shurikenPoly.toPolygonString() fill="green">
