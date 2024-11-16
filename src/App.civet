@@ -31,10 +31,10 @@ export function App()
     <h2>Input: Wang Tiles
     <h3>{glues()} Glues
     <.glues>
-      <button onClick=
+      <button title="Halve the number of glues" onClick=
         (e) => setColors Math.max 2, . %/ 2
       >−
-      <button onClick=
+      <button title="Double the number of glues" onClick=
         (e) => setColors (2*)
       >+
       <For each=[0...glues()]>
@@ -42,10 +42,10 @@ export function App()
           <Glue color=glue>
     <h3>{tiles#} Tiles
     <.tiles>
-      <button onClick=
+      <button title="Remove last Wang tile" onClick=
         (e) => setNumTiles Math.max 1, . - 1
       >−
-      <button onClick=
+      <button title="Add a Wang tile" onClick=
         (e) =>
           setNumTiles (1+)
           if numTiles() > tiles#
