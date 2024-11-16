@@ -8,6 +8,16 @@ Given *n* [Wang tiles](https://en.wikipedia.org/wiki/Wang_tile),
 the app computes **three** polygons that tile the plane
 if and only if the Wang tiles do.
 
+## [Run App](https://edemaine.github.io/three-tiles/)
+
+[Try out the app](https://edemaine.github.io/three-tiles/)
+to see the implementation in action.
+It starts with
+[an example of 11 Wang tiles](https://en.wikipedia.org/wiki/Wang_tile#/media/File:Wang_11_tiles.svg)
+that tile only periodically.
+You can add or remove colors or Wang tiles with the +/− buttons.
+You can change Wang tiles by dragging a color to a tile edge.
+
 ## Development
 
 To develop locally, use the following commands on a checkout:
