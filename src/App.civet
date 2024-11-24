@@ -29,7 +29,7 @@ export function App()
       <span .postfix>[<a href="https://arxiv.org/abs/2409.11582">paper</a>] [<a href="https://github.com/edemaine/three-tiles/">source code on GitHub</a>]
     <hr>
     <h2>Input: Wang Tiles
-    <h3>{glues()} Glues
+    <h3>{glues()} Glues <span .postfix .em>(drag from here)
     <.glues>
       <button title="Halve the number of glues" onClick=
         (e) => setColors Math.max 2, . %/ 2
@@ -40,7 +40,7 @@ export function App()
       <For each=[0...glues()]>
         (glue) =>
           <Glue color=glue>
-    <h3>{tiles#} Tiles
+    <h3>{tiles#} Tiles <span .postfix .em>(drag to here)
     <.tiles>
       <button title="Remove last Wang tile" onClick=
         (e) => setNumTiles Math.max 1, . - 1
