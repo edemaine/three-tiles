@@ -1,8 +1,9 @@
-solid-js import { createMemo, type JSX }
+solid-js import { createMemo, For, type JSX }
 operator { max } := Math
 
 ./Tile.civet import { type Prototile }
 ./Turtle.civet import { Turtle, cos, sin, Polygon }
+./color.civet import { color }
 
 l := 1.5
 eps2 := 5
@@ -61,7 +62,9 @@ midGlueGap := 1.5*l
 //aroundGlueGap := 5*l
 //midGlueGap := 4*l
 
-function wheel(t: Turtle, tiles: Prototile[], nBits: number): Turtle
+function wheel(t: Turtle, tiles: Prototile[], nBits: number): Turtle[]
+  glues: Turtle[] := []
+
   function glue(g: number)
     bitString .=
     Math.abs(g) - 1 // map positive/negative glue to nonnegative color
@@ -76,6 +79,13 @@ function wheel(t: Turtle, tiles: Prototile[], nBits: number): Turtle
     else
       bits.unshift 1, 0
       bits.push 0, 0
+
+    // Colored glue polygon
+    bisector := 90 - 45 / tiles#
+    tGlue := t.clone()
+    .fill color Math.abs(g) - 1, 1 << nBits
+    .stroke g > 0 ? "black" : "white", 1
+
     t.f aroundGlueGap
     for each bit, i of bits
       t.f midGlueGap unless i is 0
@@ -85,11 +95,28 @@ function wheel(t: Turtle, tiles: Prototile[], nBits: number): Turtle
         tweedledum t
     t.f aroundGlueGap
 
+    tGlue.r 90 - 45 / tiles#
+    tGlue.f aroundGlueGap
+    tAfter := t.clone()
+    tAfter.r 90 + 45 / tiles#
+    tAfter.f aroundGlueGap
+    d := tAfter.distance tGlue.x, tGlue.y
+    tGlue.f aroundGlueGap
+    tGlue.l 180
+    tGlue.reset()
+    tGlue.f aroundGlueGap
+    tGlue.r 90 + 45 / tiles#
+    tGlue.f d
+    tGlue.r 90 + 45 / tiles#
+    tGlue.f aroundGlueGap
+    glues.push tGlue
+
   for each dir of ['n', 'e', 's', 'w'] as const
     for each tile of tiles
       glue tile[dir]
       t.r 90 / tiles#
-  t
+
+  [t, ...glues]
 
 function notch(t: Turtle): Turtle
   t
@@ -164,9 +191,12 @@ export function ThreeTiles(props: {tiles: Prototile[], glues: number, zoom: numb
     {tiles, glues} .= unsignedToSigned props.tiles, props.glues
     nBits := ceilLog2 glues
     staplePoly := new Turtle |> staple |> .shift() |> .fill "yellow"
-    wheelPoly := new Turtle |> wheel ., tiles, nBits
-    |> .shift() //staplePoly.maxX() + tileGap
+    [wheelPoly, ...gluePolys] := new Turtle()
     |> .fill "#9142c3"
+    |> wheel ., tiles, nBits
+    for each poly of gluePolys
+      poly |> .shift 0, 0, wheelPoly
+    wheelPoly.shift()
     shurikenPoly := new Turtle |> shuriken ., tiles#, nBits
     |> .shift()
     |> .fill "green"
@@ -174,7 +204,10 @@ export function ThreeTiles(props: {tiles: Prototile[], glues: number, zoom: numb
       wheelPoly.maxX() - shurikenPoly.maxX()/2 - l * (cos(eps1) + sin(eps3))
       wheelPoly.maxY() - shurikenPoly.maxY()/2 - l * (cos(eps1) + sin(eps3))
     <svg viewBox=`${-margin} ${-margin} ${shurikenPoly.maxX() + 2*margin} ${shurikenPoly.maxY() + 2*margin}` width=`${props.zoom*100}%`>
-      <Polygon turtle=staplePoly>
-      <Polygon turtle=wheelPoly>
-      <Polygon turtle=shurikenPoly>
+      <Polygon class="ptile" turtle=staplePoly>
+      <Polygon class="ptile" turtle=wheelPoly>
+      <For each=gluePolys>
+        (poly) =>
+          <Polygon class="pglue" turtle=poly>
+      <Polygon class="ptile" turtle=shurikenPoly>
   as! JSX.Element

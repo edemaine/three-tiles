@@ -15,7 +15,11 @@ export class Turtle
   angle: number
   /** Accumulated points */
   points: [number, number][]
+  /** Rendering */
   fillColor: string?
+  strokeColor: string?
+  strokeWidth: number?
+  strokeDasharray: number[]?
 
   @(@x = 0, @y = 0, @angle = 0)
     @points = [[@x, @y]]
@@ -23,6 +27,11 @@ export class Turtle
     [@x, @y]
   fill(color: string): Turtle
     @fillColor = color
+    @
+  stroke(color: string, width: number, dash?: number[]): Turtle
+    @strokeColor = color
+    @strokeWidth = width
+    @strokeDasharray = dash
     @
 
   /** Forward */
@@ -40,6 +49,16 @@ export class Turtle
     @angle += dangle
     @
 
+  /** Reset points list to just include current position
+  (as if pen was up until now) */
+  reset(): Turtle
+    @points = [[@x, @y]]
+    @
+
+  /** Make a new fresh turtle (polygon) with current position and direction */
+  clone(): Turtle
+    new Turtle @x, @y, @angle
+
   /** For SVG <polygon points="..."> */
   toPolygonString(): string
     @points
@@ -56,13 +75,21 @@ export class Turtle
     for max [, y] of @points
 
   /** Shift drawing over so that min x and y are zero */
-  shift(ox = 0, oy = 0): Turtle
-    dx := ox - @minX()
-    dy := oy - @minY()
+  shift(ox = 0, oy = 0, relative: Turtle = @): Turtle
+    dx := ox - relative.minX()
+    dy := oy - relative.minY()
     for each point of @points
       point[0] += dx
       point[1] += dy
     @
 
-export function Polygon(props: {turtle: Turtle})
-  <polygon .ptile points=props.turtle.toPolygonString() fill=props.turtle.fillColor>
+  distance(x: number, y: number): number
+    Math.hypot @x - x, @y - y
+
+export function Polygon(props: {turtle: Turtle, class: string?})
+  <polygon points=props.turtle.toPolygonString()
+  class=props.class
+  fill=props.turtle.fillColor
+  stroke=props.turtle.strokeColor
+  stroke-width=props.turtle.strokeWidth
+  stroke-dasharray={props.turtle.strokeDasharray?.join ","}>

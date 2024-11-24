@@ -3,8 +3,7 @@ solid-js import { createSignal }
 export [colors, setColors] := createSignal 4
 
 // Generate ith color in a palette of n colors
-export function color(i: number): string
-  n := colors()
+export function color(i: number, n = colors()): string
   i = i %% n
 
   hues .= n
