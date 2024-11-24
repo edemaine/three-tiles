@@ -153,7 +153,7 @@ function ceilLog2(glues: number): number
     maxVal <<= 1
   nBits
 
-function unsignedToSigned(tiles: Prototile[], glues: number): {tiles: Prototile[], glues: number}
+export function unsignedToSigned(tiles: Prototile[], glues: number): {tiles: Prototile[], glues: number}
   // Remove aliasing
   tiles = for each tile of tiles
     {...tile}
@@ -188,7 +188,7 @@ margin := 1
 tileGap := 3 * l
 export function ThreeTiles(props: {tiles: Prototile[], glues: number, zoom: number})
   createMemo =>
-    {tiles, glues} .= unsignedToSigned props.tiles, props.glues
+    {tiles, glues} := props
     nBits := ceilLog2 glues
     staplePoly := new Turtle |> staple |> .shift() |> .fill "yellow"
     [wheelPoly, ...gluePolys] := new Turtle()

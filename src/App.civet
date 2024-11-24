@@ -1,4 +1,4 @@
-solid-js import { createSignal, For, Index }
+solid-js import { createMemo, createSignal, For, Index }
 solid-js/store import { createStore }
 @thisbeyond/solid-dnd import {
   DragDropProvider
@@ -7,16 +7,17 @@ solid-js/store import { createStore }
 }
 
 ./color.civet import { colors, setColors }
-./Glue.civet import { Glue }
-./Tile.civet import { Tile, type Prototile }
+./Glue.civet import { Glue, SignedGlue }
+./Tile.civet import { Tile, SignedTile, type Prototile }
 ./examples.civet import { examples }
-./ThreeTiles.civet import { ThreeTiles }
+./ThreeTiles.civet import { unsignedToSigned, ThreeTiles }
 
 export function App()
   [tiles, setTiles] := createStore<Prototile[]> examples.aperiodic
   [numTiles, setNumTiles] := createSignal tiles#
   glues := colors
   [zoom, setZoom] := createSignal 1
+  signed := createMemo => unsignedToSigned tiles[..<numTiles()], glues()
 
   function onDragEnd({draggable, droppable})
     return unless droppable
@@ -54,6 +55,19 @@ export function App()
         (tile, id) =>
           <Tile {tile(), id}>
     <hr>
+    <h2>Intermediate: Signed Tiles
+    <h3>{signed().glues} Glues with 2 Different Signs
+    <.glues>
+      <For each=[1..signed().glues]>
+        (glue) =>
+          <SignedGlue color=glue glues=signed().glues>
+          <SignedGlue color=-glue glues=signed().glues>
+    <h3>{signed().tiles#} Tiles
+    <.tiles>
+      <Index each=signed().tiles>
+        (tile, id) =>
+          <SignedTile {tile(), signed().glues}>
+    <hr>
     <h2>Output: Three Tiles
       <span .postfix>🔍
         <button title="Zoom in" onClick=
@@ -70,4 +84,4 @@ export function App()
           >
           Show glues
     <div .container>
-      <ThreeTiles {glues(), zoom()} tiles=tiles[..<numTiles()]>
+      <ThreeTiles {zoom()} ...signed()>

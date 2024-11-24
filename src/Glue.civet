@@ -4,3 +4,9 @@
 export function Glue(props: {color: number})
   draggable := createDraggable props.color
   <.glue use:draggable style={background: color props.color}>
+
+export function SignedGlue(props: {color: number, glues: number})
+  <.glue style={
+    background: color Math.abs(props.color) - 1, props.glues
+    border: `2px solid ${props.color > 0 ? '#444' : 'white'}`
+  }>

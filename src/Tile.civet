@@ -1,3 +1,4 @@
+solid-js import { createMemo }
 @thisbeyond/solid-dnd import { createDroppable }
 ./color.civet import { color }
 
@@ -17,20 +18,41 @@ export function Tile(props: {tile: Prototile, id: number})
   droppableE := createDroppable 4*props.id+3, 'e'
   <svg .tile viewBox=`0 0 ${tileSize} ${tileSize}`>
     <rect .background width=tileSize height=tileSize>
-    <polygon .glue fill=color(props.tile.n) points=
+    <polygon .glue fill=color(props.tile.n) stroke="#444" points=
       `0,0 ${glueSize},${glueSize} ${tileSize - glueSize},${glueSize} ${tileSize},0`
     use:droppableN classList={dropping: droppableN.isActiveDroppable}
     >
-    <polygon .glue fill=color(props.tile.w) points=
+    <polygon .glue fill=color(props.tile.w) stroke="#444" points=
       `0,0 ${glueSize},${glueSize} ${glueSize},${tileSize - glueSize} 0,${tileSize}`
     use:droppableW classList={dropping: droppableW.isActiveDroppable}
     >
-    <polygon .glue fill=color(props.tile.s) points=
+    <polygon .glue fill=color(props.tile.s) stroke="#444" points=
       `0,${tileSize} ${glueSize},${tileSize - glueSize} ${tileSize - glueSize},${tileSize - glueSize} ${tileSize},${tileSize}`
     use:droppableS classList={dropping: droppableS.isActiveDroppable}
     >
-    <polygon .glue fill=color(props.tile.e) points=
+    <polygon .glue fill=color(props.tile.e) stroke="#444" points=
       `${tileSize},0 ${tileSize - glueSize},${glueSize} ${tileSize - glueSize},${tileSize - glueSize} ${tileSize},${tileSize}`
     use:droppableE classList={dropping: droppableE.isActiveDroppable}
     >
-    <rect .outline width=tileSize height=tileSize>
+    <!--<rect .outline width=tileSize height=tileSize>-->
+
+export function SignedTile(props: {tile: Prototile, glues: number})
+  strokeWidth := 1.5
+  <svg .tile viewBox=`${-strokeWidth/2} ${-strokeWidth/2} ${tileSize + strokeWidth} ${tileSize + strokeWidth}`>
+    <rect .background width=tileSize height=tileSize>
+    <polygon .glue fill=color(Math.abs(props.tile.n) - 1, props.glues) points=
+      `0,0 ${glueSize},${glueSize} ${tileSize - glueSize},${glueSize} ${tileSize},0`
+    stroke={props.tile.n > 0 ? '#444' : 'white'}
+    >
+    <polygon .glue fill=color(Math.abs(props.tile.w) - 1, props.glues) points=
+      `0,0 ${glueSize},${glueSize} ${glueSize},${tileSize - glueSize} 0,${tileSize}`
+    stroke={props.tile.w > 0 ? '#444' : 'white'}
+    >
+    <polygon .glue fill=color(Math.abs(props.tile.s) - 1, props.glues) points=
+      `0,${tileSize} ${glueSize},${tileSize - glueSize} ${tileSize - glueSize},${tileSize - glueSize} ${tileSize},${tileSize}`
+    stroke={props.tile.s > 0 ? '#444' : 'white'}
+    >
+    <polygon .glue fill=color(Math.abs(props.tile.e) - 1, props.glues) points=
+      `${tileSize},0 ${tileSize - glueSize},${glueSize} ${tileSize - glueSize},${tileSize - glueSize} ${tileSize},${tileSize}`
+    stroke={props.tile.e > 0 ? '#444' : 'white'}
+    >
