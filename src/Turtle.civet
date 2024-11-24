@@ -44,16 +44,12 @@ export class Turtle
 
   minX(): number
     for min [x] of @points
-      x
   maxX(): number
     for max [x] of @points
-      x
   minY(): number
     for min [, y] of @points
-      y
   maxY(): number
     for max [, y] of @points
-      y
 
   /** Shift drawing over so that min x and y are zero */
   shift(ox = 0, oy = 0): Turtle
