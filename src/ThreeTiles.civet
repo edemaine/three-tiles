@@ -185,9 +185,9 @@ export function unsignedToSigned(tiles: Prototile[], glues: number): {tiles: Pro
   {tiles, glues}
 
 margin := 1
-tileGap := 3 * l
-export function ThreeTiles(props: {tiles: Prototile[], glues: number, zoom: number})
-  createMemo =>
+//tileGap := 3 * l
+export function ThreeTiles(props: {tiles: Prototile[], glues: number, zoom: number, selected: number})
+  polys := createMemo =>
     {tiles, glues} := props
     nBits := ceilLog2 glues
     staplePoly := new Turtle |> staple |> .shift() |> .fill "yellow"
@@ -203,11 +203,13 @@ export function ThreeTiles(props: {tiles: Prototile[], glues: number, zoom: numb
     shurikenPoly.shift
       wheelPoly.maxX() - shurikenPoly.maxX()/2 - l * (cos(eps1) + sin(eps3))
       wheelPoly.maxY() - shurikenPoly.maxY()/2 - l * (cos(eps1) + sin(eps3))
-    <svg viewBox=`${-margin} ${-margin} ${shurikenPoly.maxX() + 2*margin} ${shurikenPoly.maxY() + 2*margin}` width=`${props.zoom*100}%`>
-      <Polygon class="ptile" turtle=staplePoly>
-      <Polygon class="ptile" turtle=wheelPoly>
-      <For each=gluePolys>
+    {staplePoly, wheelPoly, gluePolys, shurikenPoly}
+
+  <svg viewBox=`${-margin} ${-margin} ${polys().shurikenPoly.maxX() + 2*margin} ${polys().shurikenPoly.maxY() + 2*margin}` width=`${props.zoom*100}%`>
+    <Polygon class="ptile" turtle=polys().staplePoly>
+    <g transform=`rotate(${-props.selected * 90 / props.tiles#} ${polys().wheelPoly.maxX()/2} ${polys().wheelPoly.maxY()/2})`>
+      <Polygon class="ptile" turtle=polys().wheelPoly>
+      <For each=polys().gluePolys>
         (poly) =>
           <Polygon class="pglue" turtle=poly>
-      <Polygon class="ptile" turtle=shurikenPoly>
-  as! JSX.Element
+    <Polygon class="ptile" turtle=polys().shurikenPoly>
