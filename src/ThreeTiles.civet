@@ -2,7 +2,7 @@ solid-js import { createMemo, type JSX }
 operator { max } := Math
 
 ./Tile.civet import { type Prototile }
-./Turtle.civet import { Turtle, cos, sin }
+./Turtle.civet import { Turtle, cos, sin, Polygon }
 
 l := 1.5
 eps2 := 5
@@ -163,16 +163,18 @@ export function ThreeTiles(props: {tiles: Prototile[], glues: number, zoom: numb
   createMemo =>
     {tiles, glues} .= unsignedToSigned props.tiles, props.glues
     nBits := ceilLog2 glues
-    staplePoly := new Turtle |> staple |> .shift()
+    staplePoly := new Turtle |> staple |> .shift() |> .fill "yellow"
     wheelPoly := new Turtle |> wheel ., tiles, nBits
     |> .shift() //staplePoly.maxX() + tileGap
+    |> .fill "#9142c3"
     shurikenPoly := new Turtle |> shuriken ., tiles#, nBits
     |> .shift()
+    |> .fill "green"
     shurikenPoly.shift
       wheelPoly.maxX() - shurikenPoly.maxX()/2 - l * (cos(eps1) + sin(eps3))
       wheelPoly.maxY() - shurikenPoly.maxY()/2 - l * (cos(eps1) + sin(eps3))
     <svg viewBox=`${-margin} ${-margin} ${shurikenPoly.maxX() + 2*margin} ${shurikenPoly.maxY() + 2*margin}` width=`${props.zoom*100}%`>
-      <polygon .ptile points=staplePoly.toPolygonString() fill="yellow">
-      <polygon .ptile points=wheelPoly.toPolygonString() fill="#9142c3">
-      <polygon .ptile points=shurikenPoly.toPolygonString() fill="green">
+      <Polygon turtle=staplePoly>
+      <Polygon turtle=wheelPoly>
+      <Polygon turtle=shurikenPoly>
   as! JSX.Element

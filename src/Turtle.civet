@@ -15,11 +15,15 @@ export class Turtle
   angle: number
   /** Accumulated points */
   points: [number, number][]
+  fillColor: string?
 
   @(@x = 0, @y = 0, @angle = 0)
     @points = [[@x, @y]]
   position(): [number, number]
     [@x, @y]
+  fill(color: string): Turtle
+    @fillColor = color
+    @
 
   /** Forward */
   f(d: number): Turtle
@@ -59,3 +63,6 @@ export class Turtle
       point[0] += dx
       point[1] += dy
     @
+
+export function Polygon(props: {turtle: Turtle})
+  <polygon .ptile points=props.turtle.toPolygonString() fill=props.turtle.fillColor>
