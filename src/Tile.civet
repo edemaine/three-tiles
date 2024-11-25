@@ -11,12 +11,12 @@ export type Prototile
 tileSize := 50
 glueSize := 13
 
-export function Tile(props: {tile: Prototile, id: number, onClick: any})
+export function Tile(props: {tile: Prototile, id: number, selected: boolean, onClick: any})
   droppableN := createDroppable 4*props.id+0, 'n'
   droppableW := createDroppable 4*props.id+1, 'w'
   droppableS := createDroppable 4*props.id+2, 's'
   droppableE := createDroppable 4*props.id+3, 'e'
-  <svg .tile viewBox=`0 0 ${tileSize} ${tileSize}`>
+  <svg .tile viewBox=`0 0 ${tileSize} ${tileSize}` classList={{props.selected}}>
     <rect .background width=tileSize height=tileSize {props.onClick}>
     <polygon .glue fill=color(props.tile.n) stroke="#444" points=
       `0,0 ${glueSize},${glueSize} ${tileSize - glueSize},${glueSize} ${tileSize},0`
@@ -36,9 +36,9 @@ export function Tile(props: {tile: Prototile, id: number, onClick: any})
     >
     <!--<rect .outline width=tileSize height=tileSize>-->
 
-export function SignedTile(props: {tile: Prototile, glues: number, onClick: any})
+export function SignedTile(props: {tile: Prototile, glues: number, selected: boolean, onClick: any})
   strokeWidth := 1.5
-  <svg .tile viewBox=`${-strokeWidth/2} ${-strokeWidth/2} ${tileSize + strokeWidth} ${tileSize + strokeWidth}`>
+  <svg .tile viewBox=`${-strokeWidth/2} ${-strokeWidth/2} ${tileSize + strokeWidth} ${tileSize + strokeWidth}` classList={{props.selected}}>
     <rect .background width=tileSize height=tileSize {props.onClick}>
     <polygon .glue fill=color(Math.abs(props.tile.n) - 1, props.glues) points=
       `0,0 ${glueSize},${glueSize} ${tileSize - glueSize},${glueSize} ${tileSize},0`

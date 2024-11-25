@@ -1,4 +1,4 @@
-solid-js import { createMemo, createSignal, For, Index }
+solid-js import { createMemo, createSelector, createSignal, For, Index }
 solid-js/store import { createStore }
 @thisbeyond/solid-dnd import {
   DragDropProvider
@@ -17,7 +17,8 @@ export function App()
   [numTiles, setNumTiles] := createSignal tiles#
   glues := colors
   [zoom, setZoom] := createSignal 1
-  [selected, setSelected] := createSignal 0
+  [selected, setSelected] := createSignal<number?>()
+  isSelected := createSelector selected
   signed := createMemo => unsignedToSigned tiles[..<numTiles()], glues()
 
   function onDragEnd({draggable, droppable})
@@ -56,7 +57,8 @@ export function App()
       >+
       <Index each=tiles[..<numTiles()]>
         (tile, id) =>
-          <Tile {tile(), id} onClick={=> setSelected id}>
+          <Tile {tile(), id}
+          selected={isSelected id} onClick={=> setSelected id}>
     <hr>
     <h2>Intermediate: Signed Tiles
     <h3>{signed().glues} Glues with 2 Different Signs
@@ -70,7 +72,8 @@ export function App()
     <.tiles>
       <Index each=signed().tiles>
         (tile, id) =>
-          <SignedTile {tile(), signed().glues} onClick={=> setSelected id}>
+          <SignedTile {tile(), signed().glues}
+          selected={isSelected id} onClick={=> setSelected id}>
     <hr>
     <h2>Output: Three Tiles
       <span .postfix>🔍
@@ -88,4 +91,4 @@ export function App()
           >
           Show glues
     <div .container>
-      <ThreeTiles {zoom(), selected()} ...signed()>
+      <ThreeTiles {zoom()} selected={selected() ?? 0} ...signed()>

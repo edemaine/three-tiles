@@ -30,12 +30,14 @@ a, a:visited
 
 .tiles
   display: flex
-  gap: 3px
+  gap: 5px
   flex-wrap: wrap
 
 .tile
   width: 50px
   height: 50px
+  &.selected
+    outline: 3px dotted yellow
   > .background
     fill: gray
   > .outline
