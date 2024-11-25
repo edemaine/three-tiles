@@ -1,5 +1,6 @@
 solid-js import { createMemo, For, type JSX }
 operator { max } := Math
+@solid-primitives/tween import { createTween }
 
 ./Tile.civet import { type Prototile }
 ./Turtle.civet import { Turtle, cos, sin, Polygon }
@@ -205,9 +206,17 @@ export function ThreeTiles(props: {tiles: Prototile[], glues: number, zoom: numb
       wheelPoly.maxY() - shurikenPoly.maxY()/2 - l * (cos(eps1) + sin(eps3))
     {staplePoly, wheelPoly, gluePolys, shurikenPoly}
 
+  angle := createTween
+    => -props.selected * 90 / props.tiles#
+    {}
+      duration: 1000
+      ease: (t) => 0.5 - Math.cos(Math.PI * t) / 2
+  center := createMemo =>
+    `${polys().wheelPoly.maxX()/2} ${polys().wheelPoly.maxY()/2}`
+
   <svg viewBox=`${-margin} ${-margin} ${polys().shurikenPoly.maxX() + 2*margin} ${polys().shurikenPoly.maxY() + 2*margin}` width=`${props.zoom*100}%`>
     <Polygon class="ptile" turtle=polys().staplePoly>
-    <g transform=`rotate(${-props.selected * 90 / props.tiles#} ${polys().wheelPoly.maxX()/2} ${polys().wheelPoly.maxY()/2})`>
+    <g transform=`rotate(${angle()} ${center()})`>
       <Polygon class="ptile" turtle=polys().wheelPoly>
       <For each=polys().gluePolys>
         (poly) =>
