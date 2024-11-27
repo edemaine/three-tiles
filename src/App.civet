@@ -21,9 +21,29 @@ export function App()
   isSelected := createSelector selected
   signed := createMemo => unsignedToSigned tiles[..<numTiles()], glues()
 
-  function onDragEnd({draggable, droppable})
+  function onDragEnd({draggable, droppable}): void
     return unless droppable
     setTiles droppable.id %/ 4, droppable.data, draggable.id
+
+  function downloadTiles(query: string): void
+    margin := 10
+    count .= 0
+    text .=
+      for join each tile of document.querySelectorAll `${query} svg.tile`
+        tile.outerHTML
+        .replace /<svg/, `<g transform="translate(${(50 + margin) * count++})"`
+        .replace /<\/svg>/, `</g>`
+    text = ```
+      ${svgHeader}
+      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 ${50 * count + margin * (count-1)} 50">
+      <style>
+      .background { fill: gray; }
+      .glue { stroke-width: 1.5; stroke-linejoin: round; }
+      </style>
+      ${text}
+      </svg>
+    ```
+    svgDownload text, 'tiles'
 
   <DragDropProvider {onDragEnd}>
     <DragDropSensors>
@@ -45,7 +65,10 @@ export function App()
           <Glue color=glue>
     <h3>{tiles#} Tiles
       <span .postfix .em>(drag to here)
-    <.tiles>
+      <button .postfix onClick=
+        (e) => downloadTiles '.tiles.input'
+      >SVG
+    <.tiles .input>
       <button title="Remove last Wang tile" onClick=
         (e) => setNumTiles Math.max 1, . - 1
       >−
@@ -69,7 +92,10 @@ export function App()
           <SignedGlue color=-glue glues=signed().glues>
     <h3>{signed().tiles#} Tiles
       <span .postfix .em>(click center to rotate)
-    <.tiles>
+      <button .postfix onClick=
+        (e) => downloadTiles '.tiles.intermediate'
+      >SVG
+    <.tiles .intermediate>
       <Index each=signed().tiles>
         (tile, id) =>
           <SignedTile {tile(), signed().glues}
@@ -92,3 +118,20 @@ export function App()
           Show glues
     <div .container>
       <ThreeTiles {zoom()} selected={selected() ?? 0} ...signed()>
+
+svgHeader := `<?xml version="1.0" encoding="utf-8"?>\n`
+function svgToText(root: Element): string
+  root.outerHTML
+  .replace /<svg/, `<svg xmlns="http://www.w3.org/2000/svg" version="1.1"`
+
+function svgDownload(text: string, filename: string): void
+  url := URL.createObjectURL new Blob [text], type: 'image/svg+xml'
+  document.createElement 'a'
+  ||> .style.display = 'none'
+  ||> document.documentElement.appendChild
+  ||> .href = url
+  ||> .download = filename + '.svg'
+  ||> .click() // synchronous
+  ||> .href = ''
+  ||> document.documentElement.removeChild
+  URL.revokeObjectURL url
