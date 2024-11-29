@@ -31,6 +31,7 @@ export function App()
     text .=
       for join each tile of document.querySelectorAll `${query} svg.tile`
         tile.outerHTML
+        .replace /\s*viewBox="[^"]*"/, ''
         .replace /<svg/, `<g transform="translate(${(50 + margin) * count++})"`
         .replace /<\/svg>/, `</g>`
     text = ```
@@ -116,6 +117,11 @@ export function App()
               "hideGlues", not e.currentTarget.checked
           >
           Show glues
+      <button .postfix onClick=
+        (e) => svgDownload
+          svgHeader + svgToText document.querySelector('.container > svg')!
+          'three'
+      >SVG
     <div .container>
       <ThreeTiles {zoom()} selected={selected() ?? 0} ...signed()>
 
