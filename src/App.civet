@@ -64,7 +64,7 @@ export function App()
       <For each=[0...glues()]>
         (glue) =>
           <Glue color=glue>
-    <h3>{tiles#} Tiles
+    <h3>{numTiles()} Tiles
       <span .postfix .em>(drag to here)
       <button .postfix onClick=
         (e) => downloadTiles '.tiles.input'
