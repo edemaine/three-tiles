@@ -58,7 +58,7 @@ function tweedledum(t: Turtle): Turtle
   .l 90 + eps1
   .f l * (2 - cos(eps3) + sin(eps1))
 
-aroundGlueGap := 6*l
+aroundGlueGap := (n: number) => n*l
 midGlueGap := 1.5*l
 //aroundGlueGap := 5*l
 //midGlueGap := 4*l
@@ -87,29 +87,29 @@ function wheel(t: Turtle, tiles: Prototile[], nBits: number): Turtle[]
     .fill color Math.abs(g) - 1, 1 << nBits
     .stroke g > 0 ? "black" : "white", 1
 
-    t.f aroundGlueGap
+    t.f aroundGlueGap tiles#
     for each bit, i of bits
       t.f midGlueGap unless i is 0
       if bit is 0
         tweedledee t
       else // bit is 1
         tweedledum t
-    t.f aroundGlueGap
+    t.f aroundGlueGap tiles#
 
     tGlue.r 90 - 45 / tiles#
-    tGlue.f aroundGlueGap
+    tGlue.f aroundGlueGap tiles#
     tAfter := t.clone()
     tAfter.r 90 + 45 / tiles#
-    tAfter.f aroundGlueGap
+    tAfter.f aroundGlueGap tiles#
     d := tAfter.distance tGlue.x, tGlue.y
-    tGlue.f aroundGlueGap
+    tGlue.f aroundGlueGap tiles#
     tGlue.l 180
     tGlue.reset()
-    tGlue.f aroundGlueGap
+    tGlue.f aroundGlueGap tiles#
     tGlue.r 90 + 45 / tiles#
     tGlue.f d
     tGlue.r 90 + 45 / tiles#
-    tGlue.f aroundGlueGap
+    tGlue.f aroundGlueGap tiles#
     glues.push tGlue
 
   for each dir of ['n', 'e', 's', 'w'] as const
@@ -138,11 +138,11 @@ function shuriken(t: Turtle, nTiles: number, nBits: number): Turtle
     for i of [2..nTiles]
       t
       .r 90 / nTiles
-      .f aroundGlueGap
+      .f aroundGlueGap nTiles
       for each i of [0...nBits + 4] // 4 to compensate for padding
         t.f midGlueGap unless i is 0
         notch t
-      t.f aroundGlueGap
+      t.f aroundGlueGap nTiles
     t.l 180 - 90 / nTiles
   t
 
