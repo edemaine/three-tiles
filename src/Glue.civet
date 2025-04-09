@@ -1,5 +1,5 @@
-@thisbeyond/solid-dnd import { createDraggable }
-./color.civet import { color }
+from @thisbeyond/solid-dnd import { createDraggable }
+from ./color.civet import { color }
 
 export function Glue(props: {color: number})
   draggable := createDraggable props.color

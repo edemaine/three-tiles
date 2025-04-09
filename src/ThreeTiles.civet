@@ -1,10 +1,10 @@
-solid-js import { createMemo, For, type JSX }
+from solid-js import { createMemo, For, type JSX }
 operator { max } := Math
-@solid-primitives/tween import { createTween }
+from @solid-primitives/tween import { createTween }
 
-./Tile.civet import { type Prototile }
-./Turtle.civet import { Turtle, cos, sin, Polygon }
-./color.civet import { color }
+from ./Tile.civet import { type Prototile }
+from ./Turtle.civet import { Turtle, cos, sin, Polygon }
+from ./color.civet import { color }
 
 l := 1.5
 eps2 := 5

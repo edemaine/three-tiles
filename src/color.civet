@@ -1,4 +1,4 @@
-solid-js import { createSignal }
+from solid-js import { createSignal }
 
 export [colors, setColors] := createSignal 4
 

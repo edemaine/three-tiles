@@ -1,16 +1,16 @@
-solid-js import { createMemo, createSelector, createSignal, For, Index }
-solid-js/store import { createStore }
-@thisbeyond/solid-dnd import {
+from solid-js import { createMemo, createSelector, createSignal, For, Index }
+from solid-js/store import { createStore }
+from @thisbeyond/solid-dnd import {
   DragDropProvider
   DragDropSensors
   DragEventHandler
 }
 
-./color.civet import { colors, setColors }
-./Glue.civet import { Glue, SignedGlue }
-./Tile.civet import { Tile, SignedTile, type Prototile }
-./examples.civet import { examples }
-./ThreeTiles.civet import { unsignedToSigned, ThreeTiles }
+from ./color.civet import { colors, setColors }
+from ./Glue.civet import { Glue, SignedGlue }
+from ./Tile.civet import { Tile, SignedTile, type Prototile }
+from ./examples.civet import { examples }
+from ./ThreeTiles.civet import { unsignedToSigned, ThreeTiles }
 
 export function App()
   [tiles, setTiles] := createStore<Prototile[]> examples.aperiodic

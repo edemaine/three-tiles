@@ -19,8 +19,8 @@ importers:
         version: 1.9.3
     devDependencies:
       '@danielx/civet':
-        specifier: 0.8.16
-        version: 0.8.16(typescript@5.6.3)
+        specifier: 0.10.1
+        version: 0.10.1(typescript@5.6.3)
       sass-embedded:
         specifier: ^1.80.6
         version: 1.80.7
@@ -180,8 +180,8 @@ packages:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
 
-  '@danielx/civet@0.8.16':
-    resolution: {integrity: sha512-IXPJ6dncpsRTY9fN0bjf7Ex2GQ11hzCiSQG0a4imPixOcmNzhogR9BbxwlktyseS0AxSHTLWrLkADOdfkCpeig==}
+  '@danielx/civet@0.10.1':
+    resolution: {integrity: sha512-hIRFce0qDsxEZvbZiY8IH76rgCpGvJRJy4VWvyYkfArfbMpFcpY6eT+8uzWF9w++dSEGWgPH18XSYDUdTPoAOw==}
     engines: {node: '>=19 || ^18.6.0 || ^16.17.0'}
     hasBin: true
     peerDependencies:
@@ -475,8 +475,8 @@ packages:
     peerDependencies:
       typescript: '*'
 
-  acorn@8.14.0:
-    resolution: {integrity: sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==}
+  acorn@8.14.1:
+    resolution: {integrity: sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -830,9 +830,9 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  unplugin@1.16.0:
-    resolution: {integrity: sha512-5liCNPuJW8dqh3+DM6uNM2EI3MLLpCKp/KY+9pB5M2S2SR2qvvDHhKgBOaTWEbZTAws3CXfB0rKTIolWKL05VQ==}
-    engines: {node: '>=14.0.0'}
+  unplugin@2.2.2:
+    resolution: {integrity: sha512-Qp+iiD+qCRnUek+nDoYvtWX7tfnYyXsrOnJ452FRTgOyKmTM7TUJ3l+PLPJOOWPTUyKISKp4isC5JJPSXUjGgw==}
+    engines: {node: '>=18.12.0'}
 
   update-browserslist-db@1.1.1:
     resolution: {integrity: sha512-R8UzCaa9Az+38REPiJ1tXlImTJXlVfgHZsglwBD/k6nj76ctsH1E3q4doGrukiLQd3sGQYu56r5+lo5r94l29A==}
@@ -1109,12 +1109,12 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@danielx/civet@0.8.16(typescript@5.6.3)':
+  '@danielx/civet@0.10.1(typescript@5.6.3)':
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@typescript/vfs': 1.6.0(typescript@5.6.3)
       typescript: 5.6.3
-      unplugin: 1.16.0
+      unplugin: 2.2.2
     transitivePeerDependencies:
       - supports-color
 
@@ -1311,7 +1311,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  acorn@8.14.0: {}
+  acorn@8.14.1: {}
 
   ansi-styles@4.3.0:
     dependencies:
@@ -1627,9 +1627,9 @@ snapshots:
 
   typescript@5.6.3: {}
 
-  unplugin@1.16.0:
+  unplugin@2.2.2:
     dependencies:
-      acorn: 8.14.0
+      acorn: 8.14.1
       webpack-virtual-modules: 0.6.2
 
   update-browserslist-db@1.1.1(browserslist@4.24.2):

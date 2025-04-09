@@ -1,6 +1,6 @@
-solid-js import { createMemo }
-@thisbeyond/solid-dnd import { createDroppable }
-./color.civet import { color }
+from solid-js import { createMemo }
+from @thisbeyond/solid-dnd import { createDroppable }
+from ./color.civet import { color }
 
 export type Prototile
   n: number
