@@ -1,12 +1,17 @@
 from @thisbeyond/solid-dnd import { createDraggable }
 from ./color.civet import { color }
+from ./Tile.civet import { tabWidth, tabDepth }
+
+glueSize := 25
 
 export function Glue(props: {color: number})
   draggable := createDraggable props.color
   <.glue use:draggable style={background: color props.color}>
 
 export function SignedGlue(props: {color: number, glues: number})
-  <.glue style={
-    background: color Math.abs(props.color) - 1, props.glues
-    border: `2px solid ${props.color > 0 ? '#444' : 'white'}`
-  }>
+  sign := => -Math.sign props.color
+  <svg .glue .signed viewBox=`0 ${-tabDepth} ${glueSize} ${glueSize + tabDepth}`>
+    <polygon fill={color Math.abs(props.color) - 1, props.glues} points=
+      `0,0 0,${glueSize} ${glueSize},${glueSize} ${glueSize},0 ` +
+      `${glueSize/2 + tabWidth/2},0 ${glueSize/2 + tabWidth/2},${sign() * tabDepth} ${glueSize/2 - tabWidth/2},${sign() * tabDepth} ${glueSize/2 - tabWidth/2},0`
+    >

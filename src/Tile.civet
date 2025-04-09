@@ -8,8 +8,10 @@ export type Prototile
   w: number
   e: number
 
-tileSize := 50
-glueSize := 13
+export tileSize := 50
+export glueSize := 13
+export tabWidth := 10
+export tabDepth := 5
 
 export function Tile(props: {tile: Prototile, id: number, selected: boolean, onClick: any})
   droppableN := createDroppable 4*props.id+0, 'n'
@@ -38,21 +40,21 @@ export function Tile(props: {tile: Prototile, id: number, selected: boolean, onC
 
 export function SignedTile(props: {tile: Prototile, glues: number, selected: boolean, onClick: any})
   strokeWidth := 1.5
-  <svg .tile viewBox=`${-strokeWidth/2} ${-strokeWidth/2} ${tileSize + strokeWidth} ${tileSize + strokeWidth}` classList={{props.selected}}>
-    <rect .background width=tileSize height=tileSize {props.onClick}>
-    <polygon .glue fill=color(Math.abs(props.tile.n) - 1, props.glues) points=
-      `0,0 ${glueSize},${glueSize} ${tileSize - glueSize},${glueSize} ${tileSize},0`
-    stroke={props.tile.n > 0 ? '#444' : 'white'}
+
+  function Tab(tabProps: {glue: number, angle?: number})
+    sign := => -Math.sign tabProps.glue
+    <polygon .glue fill=color(Math.abs(tabProps.glue) - 1, props.glues) points=
+      `0,0 ${glueSize},${glueSize} ${tileSize - glueSize},${glueSize} ${tileSize},0` +
+      ` ${tileSize/2 + tabWidth/2},0 ${tileSize/2 + tabWidth/2},${sign() * tabDepth} ${tileSize/2 - tabWidth/2},${sign() * tabDepth} ${tileSize/2 - tabWidth/2},0`
+    stroke='#444'
+    transform=
+      if tabProps.angle
+        `rotate(${tabProps.angle} ${tileSize/2} ${tileSize/2})`
     >
-    <polygon .glue fill=color(Math.abs(props.tile.w) - 1, props.glues) points=
-      `0,0 ${glueSize},${glueSize} ${glueSize},${tileSize - glueSize} 0,${tileSize}`
-    stroke={props.tile.w > 0 ? '#444' : 'white'}
-    >
-    <polygon .glue fill=color(Math.abs(props.tile.s) - 1, props.glues) points=
-      `0,${tileSize} ${glueSize},${tileSize - glueSize} ${tileSize - glueSize},${tileSize - glueSize} ${tileSize},${tileSize}`
-    stroke={props.tile.s > 0 ? '#444' : 'white'}
-    >
-    <polygon .glue fill=color(Math.abs(props.tile.e) - 1, props.glues) points=
-      `${tileSize},0 ${tileSize - glueSize},${glueSize} ${tileSize - glueSize},${tileSize - glueSize} ${tileSize},${tileSize}`
-    stroke={props.tile.e > 0 ? '#444' : 'white'}
-    >
+
+  <svg .tile .signed viewBox=`${-strokeWidth/2 - tabDepth} ${-strokeWidth/2 - tabDepth} ${tileSize + strokeWidth + 2*tabDepth} ${tileSize + strokeWidth + 2*tabDepth}` classList={{props.selected}} {props.onClick}>
+    <rect .background x=glueSize y=glueSize width={tileSize - 2*glueSize} height={tileSize - 2*glueSize}>
+    <Tab glue=props.tile.n>
+    <Tab glue=props.tile.e angle=90>
+    <Tab glue=props.tile.s angle=180>
+    <Tab glue=props.tile.w angle=270>
