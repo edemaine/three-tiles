@@ -41,9 +41,9 @@ export function Tile(props: {tile: Prototile, id: number, selected: boolean, onC
 export function SignedTile(props: {tile: Prototile, glues: number, selected: boolean, onClick: any})
   strokeWidth := 1.5
 
-  function Tab(tabProps: {glue: number, angle?: number})
-    sign := => -Math.sign tabProps.glue
-    <polygon .glue fill=color(Math.abs(tabProps.glue) - 1, props.glues) points=
+  function Tab(tabProps: {color: number, angle?: number})
+    sign := => -Math.sign tabProps.color
+    <polygon .glue fill=color(Math.abs(tabProps.color) - 1, props.glues) points=
       `0,0 ${glueSize},${glueSize} ${tileSize - glueSize},${glueSize} ${tileSize},0` +
       ` ${tileSize/2 + tabWidth/2},0 ${tileSize/2 + tabWidth/2},${sign() * tabDepth} ${tileSize/2 - tabWidth/2},${sign() * tabDepth} ${tileSize/2 - tabWidth/2},0`
     stroke='#444'
@@ -54,7 +54,7 @@ export function SignedTile(props: {tile: Prototile, glues: number, selected: boo
 
   <svg .tile .signed viewBox=`${-strokeWidth/2 - tabDepth} ${-strokeWidth/2 - tabDepth} ${tileSize + strokeWidth + 2*tabDepth} ${tileSize + strokeWidth + 2*tabDepth}` classList={{props.selected}} {props.onClick}>
     <rect .background x=glueSize y=glueSize width={tileSize - 2*glueSize} height={tileSize - 2*glueSize}>
-    <Tab glue=props.tile.n>
-    <Tab glue=props.tile.e angle=90>
-    <Tab glue=props.tile.s angle=180>
-    <Tab glue=props.tile.w angle=270>
+    <Tab color=props.tile.n>
+    <Tab color=props.tile.e angle=90>
+    <Tab color=props.tile.s angle=180>
+    <Tab color=props.tile.w angle=270>
