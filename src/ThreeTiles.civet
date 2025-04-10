@@ -2,7 +2,7 @@ from solid-js import { createMemo, For, type JSX }
 operator { max } := Math
 from @solid-primitives/tween import { createTween }
 
-from ./Tile.civet import { type Prototile }
+from ./Tile.civet import { type Prototile, tileSize, tabWidth, tabDepth }
 from ./Turtle.civet import { Turtle, cos, sin, Polygon }
 from ./color.civet import { color }
 
@@ -107,7 +107,20 @@ function wheel(t: Turtle, tiles: Prototile[], nBits: number): Turtle[]
     tGlue.reset()
     tGlue.f aroundGlueGap tiles#
     tGlue.r 90 + 45 / tiles#
-    tGlue.f d
+
+    // Tab/pocket
+    //tGlue.f d
+    tGlue.f d/2 * (1 - tabWidth/tileSize)
+    sign := Math.sign g
+    tGlue.l sign * 90
+    tGlue.f d/2 * tabDepth/tileSize
+    tGlue.r sign * 90
+    tGlue.f d/2 * 2*tabWidth/tileSize
+    tGlue.r sign * 90
+    tGlue.f d/2 * tabDepth/tileSize
+    tGlue.l sign * 90
+    tGlue.f d/2 * (1 - tabWidth/tileSize)
+
     tGlue.r 90 + 45 / tiles#
     tGlue.f aroundGlueGap tiles#
     glues.push tGlue
