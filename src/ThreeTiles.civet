@@ -85,7 +85,7 @@ function wheel(t: Turtle, tiles: Prototile[], nBits: number): Turtle[]
     bisector := 90 - 45 / tiles#
     tGlue := t.clone()
     .fill color Math.abs(g) - 1, 1 << nBits
-    .stroke g > 0 ? "black" : "white", 1
+    .stroke "black"
 
     t.f aroundGlueGap tiles#
     for each bit, i of bits
@@ -228,10 +228,10 @@ export function ThreeTiles(props: {tiles: Prototile[], glues: number, zoom: numb
     `${polys().wheelPoly.maxX()/2} ${polys().wheelPoly.maxY()/2}`
 
   <svg viewBox=`${-margin} ${-margin} ${polys().shurikenPoly.maxX() + 2*margin} ${polys().shurikenPoly.maxY() + 2*margin}` width=`${props.zoom*100}%`>
-    <Polygon class="ptile" turtle=polys().staplePoly>
+    <Polygon .ptile turtle=polys().staplePoly>
     <g transform=`rotate(${angle()} ${center()})`>
-      <Polygon class="ptile" turtle=polys().wheelPoly>
+      <Polygon .ptile turtle=polys().wheelPoly>
       <For each=polys().gluePolys>
         (poly) =>
-          <Polygon class="pglue" turtle=poly>
-    <Polygon class="ptile" turtle=polys().shurikenPoly>
+          <Polygon .pglue turtle=poly>
+    <Polygon .ptile turtle=polys().shurikenPoly>
