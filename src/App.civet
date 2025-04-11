@@ -25,18 +25,20 @@ export function App()
     return unless droppable
     setTiles droppable.id %/ 4, droppable.data, draggable.id
 
-  function downloadTiles(query: string): void
+  function downloadTiles(query: string, size = 50): void
     margin := 10
     count .= 0
+    let viewBox: string
     text .=
       for join each tile of document.querySelectorAll `${query} svg.tile`
         tile.outerHTML
-        .replace /\s*viewBox="[^"]*"/, ''
-        .replace /<svg/, `<g transform="translate(${(50 + margin) * count++})"`
+        .replace /\s*viewBox="([^"]*)"/, (m, ^viewBox) => ''
+        .replace /<svg/, `<g transform="translate(${(size + margin) * count++})"`
         .replace /<\/svg>/, `</g>`
+    dims := viewBox!.split(/\s+/).filter(&)
     text = ```
       ${svgHeader}
-      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 ${50 * count + margin * (count-1)} 50">
+      <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="${dims[0]} ${dims[1]} ${size * count + margin * (count-1)} ${size}">
       <style>
       .background { fill: gray; }
       .glue { stroke-width: 1.5; stroke-linejoin: round; }
@@ -94,7 +96,7 @@ export function App()
     <h3>{signed().tiles#} Tiles
       <span .postfix .em>(click to rotate wheel to this tile)
       <button .postfix onClick=
-        (e) => downloadTiles '.tiles.intermediate'
+        (e) => downloadTiles '.tiles.intermediate', 60
       >SVG
     <.tiles .intermediate>
       <Index each=signed().tiles>
