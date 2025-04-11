@@ -92,7 +92,7 @@ export function App()
           <SignedGlue color=glue glues=signed().glues>
           <SignedGlue color=-glue glues=signed().glues>
     <h3>{signed().tiles#} Tiles
-      <span .postfix .em>(click center to rotate)
+      <span .postfix .em>(click to rotate wheel to this tile)
       <button .postfix onClick=
         (e) => downloadTiles '.tiles.intermediate'
       >SVG
