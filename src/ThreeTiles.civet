@@ -74,13 +74,12 @@ function wheel(t: Turtle, tiles: Prototile[], nBits: number): Turtle[]
     // Convert string to array of numbers
     bits := for each bit of bitString
       Number bit
-    if g > 0
-      bits.unshift 0, 0
-      bits.push 0, 1
-    else
+    // Padding
+    bits.unshift 0, 0
+    bits.push 0, 1
+    // Negative glues get reversed
+    if g < 0
       bits.reverse()
-      bits.unshift 1, 0
-      bits.push 0, 0
 
     // Colored glue polygon
     bisector := 90 - 45 / tiles#
