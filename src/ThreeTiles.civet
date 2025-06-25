@@ -1,4 +1,4 @@
-from solid-js import { createMemo, For, type JSX }
+from solid-js import { createEffect, createMemo, createSignal, For, type JSX }
 operator { max } := Math
 from @solid-primitives/tween import { createTween }
 
@@ -167,6 +167,12 @@ function ceilLog2(glues: number): number
     maxVal <<= 1
   nBits
 
+function svgPoint(svg: SVGSVGElement, x: number, y: number): DOMPoint
+  pt := svg.createSVGPoint()
+  pt.x = x
+  pt.y = y
+  pt.matrixTransform svg.getScreenCTM()!.inverse()
+
 export function unsignedToSigned(tiles: Prototile[], glues: number): {tiles: Prototile[], glues: number}
   // Remove aliasing
   tiles = for each tile of tiles
@@ -226,12 +232,57 @@ export function ThreeTiles(props: {tiles: Prototile[], glues: number, zoom: numb
       ease: (t) => 0.5 - Math.cos(Math.PI * t) / 2
   center := createMemo =>
     `${polys().wheelPoly.maxX()/2} ${polys().wheelPoly.maxY()/2}`
+  width := createMemo => polys().shurikenPoly.maxX() + 2*margin
+  height := createMemo => polys().shurikenPoly.maxY() + 2*margin
 
-  <svg viewBox=`${-margin} ${-margin} ${polys().shurikenPoly.maxX() + 2*margin} ${polys().shurikenPoly.maxY() + 2*margin}` width=`${props.zoom*100}%`>
-    <Polygon .ptile turtle=polys().staplePoly>
-    <g transform=`rotate(${angle()} ${center()})`>
-      <Polygon .ptile turtle=polys().wheelPoly>
-      <For each=polys().gluePolys>
-        (poly) =>
-          <Polygon .pglue turtle=poly>
-    <Polygon .ptile turtle=polys().shurikenPoly>
+  [panX, setPanX] := createSignal 0
+  [panY, setPanY] := createSignal 0
+  createEffect =>
+    // Keep pan within bounds
+    if panX() >= 0
+      setPanX 0
+    else
+      if width() - panX() > width() * props.zoom
+        setPanX -(width() * props.zoom - width())
+    if panY() >= 0
+      setPanY 0
+    else
+      if height() - panY() > height() * props.zoom
+        setPanY -(height() * props.zoom - height())
+  starts: Record<number, {
+    panX: number
+    panY: number
+    start: {x: number, y: number}
+  }> := {}
+
+  let svg!: SVGSVGElement
+  <svg ref=svg viewBox=`${-margin} ${-margin} ${width()} ${height()}`
+    onPointerDown=
+      (e) =>
+        starts[e.pointerId] = {
+          panX(), panY()
+          start: svgPoint svg, e.clientX, e.clientY
+        }
+        svg.setPointerCapture e.pointerId
+    onPointerMove=
+      (e) =>
+        return unless starts[e.pointerId]?
+        current := svgPoint svg, e.clientX, e.clientY
+        {panX, panY, start} := starts[e.pointerId]
+        setPanX panX + (current.x - start.x)
+        setPanY panY + (current.y - start.y)
+    onPointerUp=
+      (e) =>
+        delete starts[e.pointerId]
+    onPointerLeave=
+      (e) =>
+        delete starts[e.pointerId]
+  >
+    <g transform=`translate(${panX()} ${panY()}) scale(${props.zoom})`>
+      <Polygon .ptile turtle=polys().staplePoly>
+      <g transform=`rotate(${angle()} ${center()})`>
+        <Polygon .ptile turtle=polys().wheelPoly>
+        <For each=polys().gluePolys>
+          (poly) =>
+            <Polygon .pglue turtle=poly>
+      <Polygon .ptile turtle=polys().shurikenPoly>
