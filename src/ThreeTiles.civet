@@ -210,7 +210,7 @@ export function ThreeTiles(props: {tiles: Prototile[], glues: number, zoom: numb
   polys := createMemo =>
     {tiles, glues} := props
     nBits := ceilLog2 glues
-    staplePoly := new Turtle |> staple |> .shift() |> .fill "yellow"
+    staplePoly := new Turtle |> staple |> .shift 0.1, 0.1 |> .fill "yellow"
     [wheelPoly, ...gluePolys] := new Turtle()
     |> .fill "#9142c3"
     |> wheel ., tiles, nBits
