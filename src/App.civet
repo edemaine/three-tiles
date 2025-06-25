@@ -27,6 +27,8 @@ export function App()
         setZoom (2*)
       when '-'
         setZoom (/2)
+      when '0'
+        setZoom 1
 
   function onDragEnd({draggable, droppable}): void
     return unless droppable
@@ -119,6 +121,9 @@ export function App()
         <button title="Zoom out [-]" onClick=
           (e) => setZoom (/2)
         >−
+        <button title="Reset zoom [0]" onClick=
+          (e) => setZoom 1
+        >1
       <span .postfix>
         <label>
           <input type="checkbox" checked onClick=
