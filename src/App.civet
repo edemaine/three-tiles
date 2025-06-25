@@ -21,6 +21,13 @@ export function App()
   isSelected := createSelector selected
   signed := createMemo => unsignedToSigned tiles[..<numTiles()], glues()
 
+  document.addEventListener 'keydown', (e) =>
+    switch e.key
+      when '+', '='
+        setZoom (2*)
+      when '-'
+        setZoom (/2)
+
   function onDragEnd({draggable, droppable}): void
     return unless droppable
     setTiles droppable.id %/ 4, droppable.data, draggable.id
@@ -106,10 +113,10 @@ export function App()
     <hr>
     <h2>Output: Three Tiles
       <span .postfix>🔍
-        <button title="Zoom in" onClick=
+        <button title="Zoom in [+]" onClick=
           (e) => setZoom (2*)
         >+
-        <button title="Zoom out" onClick=
+        <button title="Zoom out [-]" onClick=
           (e) => setZoom (/2)
         >−
       <span .postfix>
